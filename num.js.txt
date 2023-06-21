@@ -1,0 +1,30 @@
+function minimumAbsoluteDifference(nums) {
+  const n = nums.length / 2;
+  const sum = nums.reduce((acc, num) => acc + num, 0);
+
+  const dp = new Array(n + 1).fill(false).map(() => new Array(2 * sum + 1).fill(false));
+  dp[0][sum] = true;
+
+  for (let i = 1; i <= 2 * n; i++) {
+    for (let j = Math.min(i, n); j >= 1; j--) {
+      for (let k = 2 * sum; k >= nums[i - 1]; k--) {
+        dp[j][k] |= dp[j - 1][k - nums[i - 1]];
+      }
+    }
+  }
+
+  let minDiff = Infinity;
+
+  for (let k = sum; k <= 2 * sum; k++) {
+    if (dp[n][k]) {
+      minDiff = Math.min(minDiff, Math.abs(k - sum));
+    }
+  }
+
+  return minDiff;
+}
+
+// Test the function
+const nums = [3, 9, 7, 3];
+const minDiff = minimumAbsoluteDifference(nums);
+console.log(minDiff);
